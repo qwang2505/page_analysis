@@ -80,6 +80,7 @@ bool DomNode::drop_node(DomNode* node)
     }
 }
 
+// preorder: first visit current, then visit children.
 bool DomNode::preorder_traverse(DomTreeVisitor& visitor)
 {
     bool success = visitor.preprocess(this);
@@ -107,17 +108,22 @@ bool DomNode::preorder_traverse(DomTreeVisitor& visitor)
     return true;
 }
 
+// postorder: first visit children, then visit current
 bool DomNode::postorder_traverse(DomTreeVisitor& visitor)
 {
     cout << "visiting " << this->m_tag.c_str() << " " << this->m_children.size() << " " << this->get_attribute("class") << " " << this->get_attribute("id") << endl;
+    // in preprocess, drop negative node by tag, class, id.
+    // if dropped, success is false.
     bool success = visitor.preprocess(this);
     if (!success)
     {
         return false;
     }
 
+    // postorder_traverse children.
     for (size_t i = 0; i < this->m_children.size(); ++i)
     {
+        // if child been dropped in for loop, m_children size will change.
         bool kept = this->m_children[i]->postorder_traverse(visitor);
         if (!kept)
         {
@@ -125,12 +131,14 @@ bool DomNode::postorder_traverse(DomTreeVisitor& visitor)
         }
     }
 
+    // in visit, extract features, and add into candidates if valid.
     success = visitor.visit(this);
     if (!success)
     {
         return false;
     }
 
+    // do nothing in postprocess of BodyExtractorVisitor
     visitor.postprocess(this);
     return true;
 }

@@ -23,6 +23,7 @@ public:
 
 private:
 
+    // features defined here
     enum FeatureNames
     {
         #define BODY_EXTRACTOR_FEATURE(f) f,
@@ -99,3 +100,4 @@ private:
 };
 
 #endif
+

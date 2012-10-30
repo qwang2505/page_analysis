@@ -17,6 +17,7 @@ bool LinearClassifier::init(const vector<double>& weights, double threshold)
 
 bool LinearClassifier::classify(const vector<double>& features, double& score) const
 {
+    // weights of features
     assert(features.size() >= this->_weights.size());
     score = 0.0;
     for (size_t i = 0; i < this->_weights.size(); ++i)

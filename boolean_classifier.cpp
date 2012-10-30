@@ -48,10 +48,13 @@ bool (*c_comparers[])(double, double) = {s_equal_to, s_not_equal_to, s_less, s_l
 
 bool BooleanClassifier::init(const char* expression_str, const vector<string>& feature_names)
 {
+    // TODO understand sibling expression
     assert(expression_str != NULL);
+    // init compare operations
     vector<string> comparer_ops(c_comparer_ops, c_comparer_ops + sizeof(c_comparer_ops) / sizeof(const char*));
 
     vector<string> items;
+    // split by " "?
     split(expression_str, " ", items);
     bool needs_op = false;
     int current_group_id = 0;

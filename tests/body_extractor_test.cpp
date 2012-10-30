@@ -171,6 +171,7 @@ const char* get_dom_attr(PyObject* node, const char* attr_name)
     }
 }
 
+// build dom tree from python lxml dom tree.
 DomNode* build_dom_tree(DomNode* parent, PyObject* node, map<DomNode*, PyObject*>& relation)
 {
     const char* tag = python.get_attr_string(node, "tag");
@@ -279,13 +280,19 @@ void test_file(const string& html)
         EXPECT_TRUE(false);
     }
 
+    // build dom tree from python lxml dom tree.
     DomNode* dom = build_dom_tree(NULL, py_dom, dom_relation);
+    // get html text of dom tree by call python lxml tostring method.
     const char* body_str = python.invoke(module, "tostring", dom_relation[dom]);
+    // write.
     write_file("news.ori.html", body_str);
 
+    // init body extractor
     BodyExtractor extractor;
+    // init.
     EXPECT_TRUE(extractor.init("../body_extractor.ini"));
 
+    // extract dom
     DomNode* body = extractor.extract(dom);
     EXPECT_TRUE(body != NULL);
     if (body != NULL)
